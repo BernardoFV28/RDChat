@@ -10,181 +10,154 @@
   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>RDChat</title>
-    <style>
-    :root {
-      --bg: #1a1a1a;
-      --bubble-user: #2c2c2c;
-      --bubble-bot: #333333;
-      --text: #f5f5f5;
-      --accent: #00b894;
-      --timestamp: #aaa;
-      --radius: 20px;
-      --button-bg: #2ecc71;
-      --button-hover: #27ae60;
-      --input-bg: #333;
-      --input-border: #444;
-    }
+<style>
+    /* RESET MÁGICO */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      font-size: 1rem;
-    }
+body {
+  background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
+  font-family: 'Cinzel', serif;
+  color: #e0c28a;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
 
-    .chat-container {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      width: 100%;
-      justify-content: space-between;
-      padding: 20px;
-      box-sizing: border-box;
-    }
+/* CABEÇALHO */
+header {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #f4e2c0;
+  text-shadow: 2px 2px 4px #000;
+  margin-bottom: 10px;
+}
 
-    .chat-header {
-      background-color: #212121;
-      padding: 15px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 1.2rem;
-      color: #f1f1f1;
-      border-radius: var(--radius);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      margin-bottom: 20px;
-    }
+/* CONTÊINER DO CHAT */
+.chat-container {
+  flex: 1;
+  background: rgba(40, 25, 20, 0.8);
+  border: 3px solid #b08968;
+  border-radius: 16px;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 0 0 20px #00000099 inset;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-    .chat-window {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-      border-radius: var(--radius);
-      background-color: #222;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 500px;
-      transition: all 0.3s ease-in-out;
-    }
+/* MENSAGENS */
+.mensagem {
+  max-width: 70%;
+  padding: 12px 18px;
+  border-radius: 16px;
+  position: relative;
+  font-family: 'Passero One', cursive;
+  font-size: 1.1rem;
+  animation: fadeIn 0.6s ease;
+  line-height: 1.4;
+}
 
-    .message {
-      max-width: 80%;
-      padding: 12px 18px;
-      border-radius: var(--radius);
-      background-color: var(--bubble-bot);
-      color: var(--text);
-      line-height: 1.5;
-      position: relative;
-      word-wrap: break-word;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
-    }
+.mensagem.personagem {
+  align-self: flex-start;
+  background: linear-gradient(145deg, #3b2d27, #60462f);
+  border: 1px solid #8d674a;
+  color: #f3e5ab;
+  box-shadow: 2px 2px 8px #00000088;
+}
 
-    .message.user {
-      background-color: var(--bubble-user);
-      align-self: flex-end;
-      border-bottom-right-radius: 0;
-    }
+.mensagem.jogador {
+  align-self: flex-end;
+  background: linear-gradient(145deg, #463939, #6f4f4f);
+  border: 1px solid #aa8f77;
+  color: #ffffff;
+  box-shadow: 2px 2px 6px #00000066;
+}
 
-    .message.bot {
-      background-color: var(--bubble-bot);
-      align-self: flex-start;
-      border-bottom-left-radius: 0;
-    }
+/* AVATARZINHO ESTILOSO */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: absolute;
+  top: -10px;
+  left: -50px;
+  border: 2px solid #c9a86b;
+  box-shadow: 0 0 6px #000;
+}
 
-    .message .timestamp {
-      font-size: 0.8rem;
-      color: var(--timestamp);
-      margin-top: 5px;
-      display: block;
-      text-align: right;
-    }
+/* INPUT DE MENSAGEM */
+.input-area {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
 
-    .chat-input {
-      display: flex;
-      padding: 15px;
-      border-top: 1px solid var(--input-border);
-      background-color: #111;
-      border-radius: var(--radius);
-      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
-    }
+.input-area input {
+  flex: 1;
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #a57c4e;
+  border-radius: 10px;
+  background-color: #2b2b2b;
+  color: #e7d7c1;
+}
 
-    .chat-input input {
-      flex: 1;
-      background: var(--input-bg);
-      border: none;
-      border-radius: var(--radius);
-      padding: 10px 15px;
-      color: var(--text);
-      outline: none;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
+.input-area button {
+  padding: 10px 18px;
+  font-size: 1rem;
+  background: #a57c4e;
+  border: none;
+  border-radius: 10px;
+  color: #fff3dc;
+  cursor: pointer;
+  transition: background 0.3s;
+}
 
-    .chat-input button {
-      background-color: var(--button-bg);
-      color: #fff;
-      border: none;
-      padding: 10px 15px;
-      margin-left: 10px;
-      border-radius: var(--radius);
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+.input-area button:hover {
+  background: #d9a75d;
+}
 
-    .chat-input button:hover {
-      background-color: var(--button-hover);
-    }
+/* BOTÕES DE PERSONAGEM */
+#botoes-personagens {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
 
-    .button-container {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 15px;
-    }
+.botao-personagem {
+  background: #5c4432;
+  color: #f3e5ab;
+  border: 2px solid #b08968;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-    .button-container button {
-      background-color: var(--button-bg);
-      color: white;
-      padding: 10px 20px;
-      border-radius: var(--radius);
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+.botao-personagem:hover {
+  background: #8d674a;
+  transform: scale(1.05);
+  box-shadow: 0 0 8px #d8ba7a;
+}
 
-    .button-container button:hover {
-      background-color: var(--button-hover);
-    }
+/* ANIMAÇÃO FANTASMAGÓRICA */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
 
-    footer {
-      padding: 10px;
-      background-color: #212121;
-      text-align: center;
-      color: #aaa;
-      font-size: 0.8rem;
-      border-top: 1px solid #444;
-    }
-
-    footer span {
-      font-weight: bold;
-      color: var(--accent);
-    }
-    
-    footer .footer-glow {
-      height: 4px;
-      width: 100%;
-      background-color: var(--accent);
-      box-shadow: 0 0 10px var(--accent);
-      margin-bottom: 10px;
-    }
-
-    </style>
+</style>
 </head>
 <body>
     <div class="chat-container">
