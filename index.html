@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Passero+One&display=swap" rel="stylesheet">
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>RDChat</title>
+<style>
+    /* RESET MÁGICO */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
+  font-family: 'Cinzel', serif;
+  color: #e0c28a;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+/* CABEÇALHO */
+header {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #f4e2c0;
+  text-shadow: 2px 2px 4px #000;
+  margin-bottom: 10px;
+}
+
+/* CONTÊINER DO CHAT */
+.chat-container {
+  flex: 1;
+  background: rgba(40, 25, 20, 0.8);
+  border: 3px solid #b08968;
+  border-radius: 16px;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 0 0 20px #00000099 inset;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* MENSAGENS */
+.mensagem {
+  max-width: 70%;
+  padding: 12px 18px;
+  border-radius: 16px;
+  position: relative;
+  font-family: 'Passero One', cursive;
+  font-size: 1.1rem;
+  animation: fadeIn 0.6s ease;
+  line-height: 1.4;
+}
+
+.mensagem.personagem {
+  align-self: flex-start;
+  background: linear-gradient(145deg, #3b2d27, #60462f);
+  border: 1px solid #8d674a;
+  color: #f3e5ab;
+  box-shadow: 2px 2px 8px #00000088;
+}
+
+.mensagem.jogador {
+  align-self: flex-end;
+  background: linear-gradient(145deg, #463939, #6f4f4f);
+  border: 1px solid #aa8f77;
+  color: #ffffff;
+  box-shadow: 2px 2px 6px #00000066;
+}
+
+/* AVATARZINHO ESTILOSO */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: absolute;
+  top: -10px;
+  left: -50px;
+  border: 2px solid #c9a86b;
+  box-shadow: 0 0 6px #000;
+}
+
+/* INPUT DE MENSAGEM */
+.input-area {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #a57c4e;
+  border-radius: 10px;
+  background-color: #2b2b2b;
+  color: #e7d7c1;
+}
+
+.input-area button {
+  padding: 10px 18px;
+  font-size: 1rem;
+  background: #a57c4e;
+  border: none;
+  border-radius: 10px;
+  color: #fff3dc;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.input-area button:hover {
+  background: #d9a75d;
+}
+
+/* BOTÕES DE PERSONAGEM */
+#botoes-personagens {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.botao-personagem {
+  background: #5c4432;
+  color: #f3e5ab;
+  border: 2px solid #b08968;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.botao-personagem:hover {
+  background: #8d674a;
+  transform: scale(1.05);
+  box-shadow: 0 0 8px #d8ba7a;
+}
+
+/* ANIMAÇÃO FANTASMAGÓRICA */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+</style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+          <div class="message bot-message">Escolha um personagem para começar o chat!</div>
+        </div>
+        <div class="button-container">
+          <button onclick="iniciarChat('arauto')">Arauto N°7</button>
+          <button onclick="iniciarChat('eryon')">Eryon</button>
+          <button onclick="iniciarChat('valen')">Valen</button>
+          <button onclick="iniciarChat('zerys')">Zerys</button>
+          <button onclick="iniciarChat('coronel')">Coronel Rufino</button>
+          <button onclick="iniciarChat('dranemoi')">Dr. Anemoi</button>
+          <button onclick="iniciarChat('ivirik')">Ivirik</button>
+        </div>
+      
+        <!-- Perguntas pré-definidas para o chat -->
+        <div id="perguntas">
+          <button onclick="enviarPergunta('Qual a sua origem?')">Qual a sua origem?</button>
+          <button onclick="enviarPergunta('Qual seu maior poder?')">Qual seu maior poder?</button>
+          <button onclick="enviarPergunta('O que você deseja alcançar?')">O que você deseja alcançar?</button>
+          <button onclick="enviarPergunta('Como você controla seu elemento?')">Como você controla seu elemento?</button>
+        </div>
+      
+        <input type="text" id="user-input" placeholder="Ou digite sua pergunta..." />
+        <button onclick="enviarMensagem()">Enviar</button>
+      </div>
+              <script>let personagemAtual = '';
+      
+      const personagens = {
+        "arauto": {
+          "nome": "Arauto N°7",
+          "elemento": "Água",
+          "fala_inicial": "Das profundezas abissais, emerge a voz que ecoa nas ondas... O Arauto N°7. E você está prestes a ouvir sua verdade.",
+          "respostas": [
+            {"pergunta": "Qual a sua origem?", "resposta": "Fui um dos 7 arautos, os prototipos que depois eu e meus irmãos viramos generais por sermos mais fortes do que os outros... mas os meus irmãos conspiraram contra mim tive que desligar eles, na minha ultima luta estavamos em desvantagem contra os xenosynthis e meu esquadrão se rendeu mas eu entrei no mar e fiquei por 3 anos lá..."},
+            {"pergunta": "Qual seu maior poder?", "resposta": "{É o cravos do leviatã se eu estiver com 2 necrocrystais e nivel 25 2d 10 de dano} :invoco um monstro formado de agua e aço enferujado que demonstra os horrores da guerra "},
+            {"pergunta": "O que você deseja alcançar?", "resposta": "Não busco mais nada somente acabar com a regnum e retiar os necrocrystais da grande fabrica e com os necrocrystais devolve los para os seres mitologicos para ele terem uma nova vida... e ter um casinha no fundo do mar talvez...."},
+            {"pergunta": "Como você controla seu elemento?", "resposta": "A água e eu nos fundimos ela precisava de um arauto para ela e para o leviatã e eu precisava de alguem que me escutasse."}
+          ]
+        },
+        "eryon": {
+          "nome": "Eryon",
+          "elemento": "Fogo",
+          "fala_inicial": "Sente o calor? É o fogo que arde em minha alma. Mas cuidado... Não é um calor acolhedor é a minha defesa.",
+          "respostas": [
+            {"pergunta": "Qual a sua origem?", "resposta": "Eu era um humano agora eu não sei o que eu sou, minha familia desapareceu e eu culpei a regnum fui pra sublivin e o fogo me escolheu como seu herdeiro."},
+            {"pergunta": "Qual seu maior poder?", "resposta": "Solaris quando fico no meu limite solaris vira : Causa dano massivo de fogo {3d6 de dano} a todos os inimigos, destruindo obstáculos e campos. Além disso, Eryon pode absorver a energia das chamas, recuperando 100% de sua saúde e aumentando sua força em 50% por 2 turnos. "},
+            {"pergunta": "O que você deseja alcançar?", "resposta": "Quero me tornar forte o suficiente para nunca me machucarem meu coração mesmo sendo do mais puro fogo ainda busca redenção."},
+            {"pergunta": "Como você controla seu elemento?", "resposta": "O fogo não se controla. Ele é uma força incontrolável mas obedente a honra do seu hospedeiro, e eu sou sua chama viva. A cada sopro, o domínio se estende. Eu sou o fogo, e ele é parte de mim ."}
+          ]
+        },
+        "valen": {
+          "nome": "Valen",
+          "elemento": "Cristal",
+          "fala_inicial": "Na pureza do cristal, repousa a verdade que muitos evitam encarar. Eu sou a transparência que revela o que o mundo não quer ver.",
+          "respostas": [
+            {"pergunta": "Qual a sua origem?", "resposta": "Eu não me lembro as vezes tenho lapsos de memoria lembrando de criar alguns cristais em arvores somente para me divertir e veio uma mulher com um cajado que carrego ele até hoje e ela disse: voe pelos mundos que você nunca irar se lembrar "},
+            {"pergunta": "Qual seu maior poder?", "resposta": "O pilar da verdade em sua forma mais pura: os pilares liberam esporos transformando uma área de 2 km  {causa 2d6 de dano } em uma terra de cristais que podem conter armadilhas e os pilares são como câmeras.... "},
+            {"pergunta": "O que você deseja alcançar?", "resposta": "Proteger a verdade. Mostrar a beleza que é oculta aos olhos comuns. E, talvez, revelar que a verdadeira força vem da clareza."},
+            {"pergunta": "Como você controla seu elemento?", "resposta": "Eu nasci assim e me machucaram por ser mais inteligente e forte."}
+          ]
+        },
+        "zerys": {
+          "nome": "Zerys",
+          "elemento": "Metal",
+          "fala_inicial": "Onde a destruição se encontra com a criação, ali estou eu. O metal que nunca quebra e a mente que nunca se desvia.",
+          "respostas": [
+            {"pergunta": "Qual a sua origem?", "resposta": "Em altiora fui criado em um berço e fui usado como arma de guerra e segurança particular. usei o poder para defender as pessoas erradas "},
+            {"pergunta": "Qual seu maior poder?", "resposta": "Forja de montareu Descrição: Zerys invoca uma armadura de metal imbatível que se funde com o próprio corpo, transformando-o em uma forma monstruosa e quase invulnerável. Durante essa transformação, ele pode invocar armas de metal extremamente afiadas e com poderes devastadores. Aumento de Força: Zerys ganha +100% de ataque e +100% de defesa durante 3 turnos Dano de Área: Ele pode lançar lâminas de metal causando dano (4d6 de ATK) em todos os inimigos em um raio de 5 metros."},
+            {"pergunta": "O que você deseja alcançar?", "resposta": "Criar um refugio para os seres miticos."},
+            {"pergunta": "Como você controla seu elemento?", "resposta": "O metal não me obedece. Ele é minha extensão, meu reflexo. Eu o moldo, o faço seguir minha vontade, porque minha alma é mais dura que qualquer liga de ferro."}
+          ]
+        },
+        "coronel": {
+          "nome": "Coronel Rufino",
+          "elemento": "Água / Vapor",
+          "fala_inicial": "O vapor é a cortina que esconde minhas intenções. Às vezes, a névoa é minha aliada, e a guerra, meu campo de batalha.",
+          "respostas": [
+            {"pergunta": "Qual a sua origem?", "resposta": "Fui  chefe de segurança da regnum, e fui criado em uma pequena vila perto de ferrúmia...fiz coisas que não deveria fazer... "},
+            {"pergunta": "O que você deseja alcançar?", "resposta": "Dominar a arte da guerra, usando o vapor e a água fazer os xenosynthis sucumbirem a regnum e aos humanos."},
+            {"pergunta": "Qual seu maior poder?", "resposta": "Crio uma nevoa toxica em um raio de 5m {1d12}."},
+            {"pergunta": "Como você controla seu elemento?", "resposta": "O vapor não se controla com força bruta. Ele é a resposta à necessidade de adaptação. Eu sou o mestre das condições, e o vapor é o meu aliado."}
+          ]
+        },
+        "dranemoi": {
+          "nome": "Dr. Anemoi",
+          "elemento": "Dark / Vapor",
+          "fala_inicial": "Na escuridão e na neblina, encontro os segredos que o mundo não ousa revelar. E é lá que eu me alimento.",
+          "respostas": [
+            {"pergunta": "Qual a sua origem?", "resposta": "Nasci em uma ilha muito pacifica, mas pelas minhas invenções chamaram a atenção da regnum me tiraram a força e virei cientista lá."},
+            {"pergunta": "Qual seu maior poder?", "resposta": "Faço o meu cavalo de aço virar uma espada com armadorapara defesa {1d100 para defesa}."},
+            {"pergunta": "O que você deseja alcançar?", "resposta": "voltar a minha ilha e ter uma familia e proteger a quem eu amo"},
+            {"pergunta": "Como você controla seu elemento?", "resposta": "O vapor é como a mente humana: densa e maleável. Eu o comando com a mente, criando ilusões que distorcem a realidade e dissolvem a verdade."}
+          ]
+        },
+        "ivirik": {
+          "nome": "Ivirik",
+          "elemento": "Água",
+          "fala_inicial": "A tempestade que arrasa é apenas um reflexo de minha alma. Você não pode fugir da água... ela sempre encontra seu caminho.",
+          "respostas": [
+            {"pergunta": "Qual a sua origem?", "resposta": "Vim das profundezas que nenhum ser humano pode imaginar, onde as correntes não são meros fluxos, mas caminhos para outros mundos."},
+            {"pergunta": "Qual seu maior poder?", "resposta": "Criar uma barricada de água fazendo qualquer dano recebido ganha um adiconal de um de um{1d6}"},
+            {"pergunta": "O que você deseja alcançar?", "resposta": "Desejo ser o guardião das águas que conectam todos os mundos. Quero trazer equilíbrio entre a criação e a destruição."},
+            {"pergunta": "Como você controla seu elemento?", "resposta": "A água não me obedece, eu sou a água. Em mim, ela se manifesta como uma força primordial, a única força verdadeira."}
+          ]
+        }
+      };
+      
+      // Função de inicialização do chat com o personagem escolhido
+      function iniciarChat(personagem) {
+        personagemAtual = personagem;
+        const chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML = `<div class="message bot-message">${personagens[personagem].fala_inicial}</div>`;
+        document.getElementById("perguntas").style.display = 'block'; // Exibe as perguntas predefinidas
+      }
+      
+      // Função para enviar perguntas e respostas
+      function enviarPergunta(pergunta) {
+        const chatBox = document.getElementById("chat-box");
+        let respostaEncontrada = false;
+      
+        // Mostra a pergunta
+        let userMessage = document.createElement('div');
+        userMessage.classList.add('message', 'user-message');
+        userMessage.textContent = pergunta;
+        chatBox.appendChild(userMessage);
+      
+        // Procurando a resposta da pergunta no personagem
+        personagens[personagemAtual].respostas.forEach((item) => {
+          if (item.pergunta.toLowerCase() === pergunta.toLowerCase()) {
+            let botMessage = document.createElement('div');
+            botMessage.classList.add('message', 'bot-message');
+            botMessage.textContent = item.resposta;
+            chatBox.appendChild(botMessage);
+            respostaEncontrada = true;
+          }
+        });
+      
+        if (!respostaEncontrada) {
+          let botMessage = document.createElement('div');
+          botMessage.classList.add('message', 'bot-message');
+          botMessage.textContent = "Desculpe, não tenho uma resposta para isso ainda...";
+          chatBox.appendChild(botMessage);
+        }
+      
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+      
+      // Função para enviar uma mensagem personalizada
+      function enviarMensagem() {
+        const userInput = document.getElementById("user-input").value;
+        if (userInput.trim()) {
+          const chatBox = document.getElementById("chat-box");
+          let userMessage = document.createElement('div');
+          userMessage.classList.add('message', 'user-message');
+          userMessage.textContent = userInput;
+          chatBox.appendChild(userMessage);
+      
+          // Resposta do bot, caso a entrada seja válida
+          let botMessage = document.createElement('div');
+          botMessage.classList.add('message', 'bot-message');
+          botMessage.textContent = "Desculpe, não tenho uma resposta para isso ainda...";
+          chatBox.appendChild(botMessage);
+          
+          document.getElementById("user-input").value = '';
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      }
+      </script>
+      
+          <footer class="raizes-footer">
+        <div class="footer-glow"></div>
+        <p>
+          © 2025 <span>RDChat</span> — criando o melhor que pudermos :)
+        </p>
+      </footer>
+</body>
+</html>
